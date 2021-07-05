@@ -7,7 +7,9 @@ const keys = require('./keys');
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:80'
+}));
 const port = 3000;
 
 
