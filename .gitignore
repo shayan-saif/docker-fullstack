@@ -1,17 +1,17 @@
 node_modules
 backend/node_modules
-frontend/node_modules
+client/node_modules
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-frontend/dist
-frontend/tmp
-frontend/out-tsc
-frontend/bazel-out
-frontend/node_modules
-frontend.settings/
-frontend/.sass-cache
-frontend/connect.lock
-frontend/coverage
-frontend/libpeerconnection.log
+client/dist
+client/tmp
+client/out-tsc
+client/bazel-out
+client/node_modules
+client.settings/
+client/.sass-cache
+client/connect.lock
+client/coverage
+client/libpeerconnection.log
