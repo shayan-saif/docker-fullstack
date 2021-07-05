@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { IPost } from './IPost';
 
-const backend = 'http://express:3000';
+const backend = 'http://localhost:3000';
 
 @Injectable({
   providedIn: 'root'

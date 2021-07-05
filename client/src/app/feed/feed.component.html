@@ -1,5 +1,5 @@
 <div class="bg-white p-4 rounded-lg shadow-md">
   <app-input></app-input>
   <hr>
-  <app-post *ngFor="let post of posts.slice().reverse()" [post]="post"></app-post>
+  <app-post *ngFor="let post of posts" [post]="post"></app-post>
 </div>

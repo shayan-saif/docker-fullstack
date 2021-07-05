@@ -16,14 +16,14 @@ services:
       - database=postgres
       - password=shayan
       # - CHOKIDAR_USEPOLLING=true
-    # ports:
-    #   - 3000:3000
+    ports:
+      - 3000:3000
     # volumes: 
     #   - /app/node_modules
     #   - ./backend:/app
   angular:
     build:
-      context: ./frontend
+      context: ./client
     ports: 
       - 8080:80
 
