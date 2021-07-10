@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IPost } from 'src/app/IPost';
 import { PostService } from 'src/app/post.service';
 
@@ -8,8 +9,10 @@ import { PostService } from 'src/app/post.service';
   styleUrls: ['./input.component.scss']
 })
 export class InputComponent implements OnInit {
-  title: string;
-  content: string;
+  postForm = new FormGroup({
+    title: new FormControl(null, Validators.required),
+    content: new FormControl(null, Validators.required)
+  })
 
   constructor(private postService: PostService) { }
 
@@ -17,19 +20,18 @@ export class InputComponent implements OnInit {
   }
 
   onCreatePost() {
+    if(this.postForm.invalid) {
+      this.postForm.markAllAsTouched();
+      return;
+    }
+
     const post: IPost = {
-      title: this.title,
-      content: this.content
-    } 
+      title: this.postForm.get(['title']).value,
+      content: this.postForm.get(['content']).value
+    }
 
     this.postService.createPost(post);
 
-    this.resetForm();
-    
+    this.postForm.reset();
   }
-
-  resetForm() {
-    this.title = "", this.content = "";
-  }
-
 }

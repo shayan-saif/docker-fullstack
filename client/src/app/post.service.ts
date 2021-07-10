@@ -26,7 +26,8 @@ export class PostService {
     this.http.post<any>(backend + '/posts/create', payload).subscribe((res) => {
 
       const newPost: IPost = {
-        pid: res.pid,
+        post_id: res.post_id,
+        created_at: new Date(),
         title: res.title,
         content: res.content
       }
@@ -37,10 +38,10 @@ export class PostService {
 
   }
 
-  deletePost(pid: number) {
-    this.http.delete(backend + '/posts/delete/' + pid).subscribe(() => {
+  deletePost(post_id: number) {
+    this.http.delete(backend + '/posts/delete/' + post_id).subscribe(() => {
       let updatedPosts = this.posts.value.filter((post) => {
-        return post.pid != pid;
+        return post.post_id != post_id;
       });
       this.posts.next(updatedPosts);
     });

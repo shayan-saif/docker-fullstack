@@ -16,7 +16,7 @@ export class PostComponent implements OnInit {
   }
 
   onDeletePost() {
-    this.postService.deletePost(this.post.pid);
+    this.postService.deletePost(this.post.post_id);
   }
 
 }

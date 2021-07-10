@@ -21,8 +21,8 @@ const pool = new Pool({
   port: keys.pgPort
 });
 pool.connect().catch((err) => console.log(err));
-pool.query('CREATE TABLE IF NOT EXISTS Posts(pid SERIAL NOT NULL, title varchar(255), content varchar(255))');
-
+pool.query('CREATE TABLE IF NOT EXISTS users (user_id INT GENERATED ALWAYS AS IDENTITY, username varchar(32) UNIQUE NOT NULL , password varchar(255) NOT NULL, PRIMARY KEY(user_id))');
+pool.query('CREATE TABLE IF NOT EXISTS posts (post_id INT GENERATED ALWAYS AS IDENTITY, user_id INT, created_at TIMESTAMP DEFAULT NOW(), title text NOT NULL, content text NOT NULL, FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE)');
 
 app.get('/', (req, res) => {
   res.send("Hello from the backend!")
@@ -35,9 +35,9 @@ app.get('/posts', async (req, res) => {
   res.json(posts.rows);
 });
 
-app.get('/posts/:pid', async (req, res) => {
-  const pid = req.params.pid;
-  const posts = await pool.query('SELECT * FROM Posts WHERE pid = $1', [pid]);
+app.get('/posts/:post_id', async (req, res) => {
+  const post_id = req.params.post_id;
+  const posts = await pool.query('SELECT * FROM Posts WHERE post_id = $1', [post_id]);
 
   res.json(posts.rows[0]);
 });
@@ -55,16 +55,16 @@ app.post('/posts/create', async (req, res) => {
     });
 });
 
-app.patch('/posts/update/:pid', async (req, res) => {
-  const pid = req.params.pid;
+app.patch('/posts/update/:post_id', async (req, res) => {
+  const post_id = req.params.post_id;
   const { title, content } = req.body;
   if (title && content) {
-    pool.query('UPDATE Posts SET title = $1, content = $2 WHERE pid = $3', [title, content, pid]);
+    pool.query('UPDATE Posts SET title = $1, content = $2 WHERE post_id = $3', [title, content, post_id]);
   } else {
     if (title) {
-      pool.query('UPDATE Posts SET title = $1 WHERE pid = $2', [title, content]);
+      pool.query('UPDATE Posts SET title = $1 WHERE post_id = $2', [title, content]);
     } else if (content) {
-      pool.query('UPDATE Posts SET content = $1 WHERE pid = $2', [content, pid]);
+      pool.query('UPDATE Posts SET content = $1 WHERE post_id = $2', [content, post_id]);
     }
   }
 
@@ -78,10 +78,10 @@ app.delete('/posts/delete', async (req, res) => {
     .catch((err) => { console.log(err); });
 });
 
-app.delete('/posts/delete/:pid', async (req, res) => {
-  const pid = req.params.pid;
+app.delete('/posts/delete/:post_id', async (req, res) => {
+  const post_id = req.params.post_id;
 
-  pool.query('DELETE from Posts WHERE pid = $1 RETURNING *', [pid])
+  pool.query('DELETE from Posts WHERE post_id = $1 RETURNING *', [post_id])
     .then((deleted) => { res.status(200).json(deleted.rows[0]); })
     .catch((err) => { console.log(err); });
 });

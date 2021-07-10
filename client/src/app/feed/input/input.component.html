@@ -1,8 +1,14 @@
-<div class="flex flex-col space-y-4 mb-4">
-  <input type="text" name="title" class="border-none bg-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 transition duration-200 ease-in" placeholder="Title of your post" autocomplete="off" [(ngModel)]="title">
-  <textarea name="content" cols="30" rows="4" class="border-none bg-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 transition duration-200 ease-in" placeholder="Content of your post" autocomplete="off" [(ngModel)]="content"></textarea>
-  <div class="flex justify-end space-x-4">
-    <button type="submit" class="bg-indigo-400 px-4 py-2 text-white focus:outline-none rounded-lg hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-600 focus:ring-opacity-50 font-semibold transition duration-200 ease-in" (click)="onCreatePost()">Submit</button>
-    <button type="button" class="border-2 px-4 py-2 focus:outline-none rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50 font-semibold transition duration-200 ease-in" (click)="resetForm()">Clear</button>
+<form class="flex flex-col space-y-4 mb-4" [formGroup]="postForm" (ngSubmit)="onCreatePost()">
+  <div class="relative">
+    <input type="text" name="title" class="w-full border-none bg-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 transition duration-200 ease-in ring-red-400" placeholder="Title of your post" autocomplete="off" formControlName="title" [class.ring-2]="postForm.get('title').touched && postForm.get('title').invalid">
+    <span *ngIf="postForm.get('title').touched && postForm.get('title').invalid" class="text-red-600 top-0">Your post must have a title</span>
   </div>
-</div>
+  <div class="relative">
+    <textarea name="content" cols="30" rows="4" class="w-full border-none bg-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 transition duration-200 ease-in ring-red-400" placeholder="Content of your post" autocomplete="off" formControlName="content" [class.ring-2]="postForm.get('content').touched && postForm.get('content').invalid"></textarea>
+    <span *ngIf="postForm.get('content').touched && postForm.get('content').invalid" class="text-red-600 top-0">Your post must have some content</span>
+  </div>
+  <div class="flex justify-end space-x-4">
+    <button type="submit" class="bg-indigo-400 px-4 py-2 text-white focus:outline-none rounded-lg hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-600 focus:ring-opacity-50 font-semibold transition duration-200 ease-in">Submit</button>
+    <button type="button" class="border-2 px-4 py-2 focus:outline-none rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50 font-semibold transition duration-200 ease-in" (click)="postForm.reset()">Clear</button>
+  </div>
+</form>
