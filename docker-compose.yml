@@ -18,13 +18,13 @@ services:
       # - CHOKIDAR_USEPOLLING=true
     ports:
       - 3000:3000
-    # volumes: 
-    #   - /app/node_modules
-    #   - ./backend:/app
-  angular:
-    build:
-      context: ./client
-    ports: 
-      - 80:80
+    volumes: 
+      - /app/node_modules
+      - ./backend:/app
+  # angular:
+  #   build:
+  #     context: ./client
+  #   ports: 
+  #     - 80:80
 
       

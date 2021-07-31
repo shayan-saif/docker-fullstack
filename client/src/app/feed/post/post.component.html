@@ -1,13 +1,30 @@
 <div class="bg-white p-4 rounded-lg shadow-md">
-  <div class="flex justify-between">
-    <h3 class="text-lg font-bold">{{ post.title }}</h3>
-    <button (click)="onDeletePost()"><i class="material-icons rounded-lg hover:bg-gray-200 p-2">
-      close
-      </i></button>
+  <div class="flex justify-between mb-3">
+    <h3 class="text-lg font-bold" *ngIf="!editMode">{{ post.title }}</h3>
+    <input type="text" [(ngModel)]="post.title"
+      class="w-full border-none bg-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 transition duration-200 ease-in ring-red-400"
+      placeholder="Title of your post" autocomplete="off" *ngIf="editMode" />
+    <div *ngIf="!editMode">
+      <button (click)="onEditPost()"><i class="material-icons rounded-lg hover:bg-gray-200 p-2">
+          edit
+        </i></button>
+      <button (click)="onDeletePost()"><i class="material-icons rounded-lg hover:bg-gray-200 p-2">
+          close
+        </i></button>
+    </div>
 
   </div>
-  <p>{{ post.content }}</p>
-  <div class="flex justify-end mt-3">
+  <p *ngIf="!editMode">{{ post.content }}</p>
+  <textarea name="content" cols="30" rows="4"
+    class="w-full border-none bg-gray-100 rounded-lg focus:ring-2 focus:ring-blue-400 transition duration-200 ease-in ring-red-400 mb-4"
+    placeholder="Content of your post" autocomplete="off" *ngIf="editMode" [(ngModel)]="post.content">{{ post.content }}</textarea>
+  <div class="flex justify-end mt-3" *ngIf="!editMode">
     <span class="text-gray-500">{{ post.created_at | date }}</span>
+  </div>
+  <div class="flex justify-end space-x-4" *ngIf="editMode">
+    <button type="submit"
+      class="bg-indigo-400 px-4 py-2 text-white focus:outline-none rounded-lg hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-600 focus:ring-opacity-50 font-semibold transition duration-200 ease-in" (click)="onEditSubmit()">Submit</button>
+    <button type="button"
+      class="border-2 px-4 py-2 focus:outline-none rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50 font-semibold transition duration-200 ease-in" (click)="onCancelEdit()">Cancel</button>
   </div>
 </div>

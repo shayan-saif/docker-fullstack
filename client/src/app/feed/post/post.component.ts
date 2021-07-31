@@ -9,10 +9,24 @@ import { PostService } from 'src/app/post.service';
 })
 export class PostComponent implements OnInit {
   @Input() post: IPost;
+  editMode: boolean = false;
 
   constructor(private postService: PostService) { }
 
   ngOnInit(): void {
+  }
+
+  onEditPost() {
+    this.editMode = true;
+  }
+
+  onCancelEdit() {
+    this.editMode = false;
+  }
+
+  onEditSubmit() {
+    this.postService.editPost(this.post);
+    this.editMode = false;
   }
 
   onDeletePost() {

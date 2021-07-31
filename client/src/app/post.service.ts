@@ -15,7 +15,9 @@ export class PostService {
 
 
   getPosts() {
-    this.http.get<IPost[]>(backend + '/posts').subscribe((posts) => this.posts.next(posts));
+    this.http.get<IPost[]>(backend + '/posts').subscribe((posts) => {
+      this.posts.next(posts.sort((postOne, postTwo) => postOne.post_id - postTwo.post_id));
+    });
   }
 
   createPost(post: IPost) {
@@ -32,8 +34,25 @@ export class PostService {
         content: res.content
       }
 
+
+
       let updatedPosts = [...this.posts.value, newPost];
       this.posts.next(updatedPosts);
+    });
+
+  }
+
+  editPost(post: IPost) {
+    const payload = {
+      title: post.title,
+      content: post.content
+    }
+    this.http.patch<any>(backend + `/posts/update/${post.post_id}`, payload).subscribe((res) => {
+
+      const index = this.posts.value.findIndex((postItem) => postItem.post_id === res.post_id);
+
+      this.posts.value[index] = res;
+
     });
 
   }
@@ -45,8 +64,5 @@ export class PostService {
       });
       this.posts.next(updatedPosts);
     });
-
   }
-
-
 }

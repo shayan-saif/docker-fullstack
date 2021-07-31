@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors({
-  origin: 'http://localhost'
+  origin: 'http://localhost:4200'
 }));
 const port = 3000;
 
@@ -25,7 +25,7 @@ pool.query('CREATE TABLE IF NOT EXISTS users (user_id INT GENERATED ALWAYS AS ID
 pool.query('CREATE TABLE IF NOT EXISTS posts (post_id INT GENERATED ALWAYS AS IDENTITY, user_id INT, created_at TIMESTAMP DEFAULT NOW(), title text NOT NULL, content text NOT NULL, FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE)');
 
 app.get('/', (req, res) => {
-  res.send("Hello from the backend!")
+  res.send("Hello from the backend! Navigate to \"localhost:80\" to see the front-end application.")
 
 });
 
@@ -59,17 +59,23 @@ app.patch('/posts/update/:post_id', async (req, res) => {
   const post_id = req.params.post_id;
   const { title, content } = req.body;
   if (title && content) {
-    pool.query('UPDATE Posts SET title = $1, content = $2 WHERE post_id = $3', [title, content, post_id]);
+    pool.query('UPDATE Posts SET title = $1, content = $2 WHERE post_id = $3 RETURNING *', [title, content, post_id]).then((entry) => {
+      return res.status(200).json(entry.rows[0]);
+    });
   } else {
     if (title) {
-      pool.query('UPDATE Posts SET title = $1 WHERE post_id = $2', [title, content]);
+      pool.query('UPDATE Posts SET title = $1 WHERE post_id = $2 RETURNING *', [title, post_id]).then((entry) => {
+        return res.status(200).json(entry.rows[0]);
+      });
     } else if (content) {
-      pool.query('UPDATE Posts SET content = $1 WHERE post_id = $2', [content, post_id]);
+      pool.query('UPDATE Posts SET content = $1 WHERE post_id = $2 RETURNING *', [content, post_id]).then((entry) => {
+        return res.status(200).json(entry.rows[0]);
+      });
     }
   }
 
+  return res.status(500);
 
-  res.status(200).send("Post updated");
 });
 
 app.delete('/posts/delete', async (req, res) => {
