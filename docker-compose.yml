@@ -8,6 +8,8 @@ services:
     # ports:
     #   - 5432:5432
   express:
+    depends_on:
+      - "postgres"
     build:
       context: ./backend
     environment: 
@@ -22,6 +24,9 @@ services:
     #   - /app/node_modules
     #   - ./backend:/app
   angular:
+    depends_on:
+      - "postgres"
+      - "express"
     build:
       context: ./client
     ports: 
