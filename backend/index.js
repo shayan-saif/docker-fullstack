@@ -20,9 +20,11 @@ const pool = new Pool({
   password: keys.pgPassword,
   port: keys.pgPort
 });
-pool.connect().catch((err) => console.log(err));
-pool.query('CREATE TABLE IF NOT EXISTS users (user_id INT GENERATED ALWAYS AS IDENTITY, username varchar(32) UNIQUE NOT NULL , password varchar(255) NOT NULL, PRIMARY KEY(user_id))');
-pool.query('CREATE TABLE IF NOT EXISTS posts (post_id INT GENERATED ALWAYS AS IDENTITY, user_id INT, created_at TIMESTAMP DEFAULT NOW(), title text NOT NULL, content text NOT NULL, FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE)');
+pool.connect().then(() => {
+  pool.query('CREATE TABLE IF NOT EXISTS users (user_id INT GENERATED ALWAYS AS IDENTITY, username varchar(32) UNIQUE NOT NULL , password varchar(255) NOT NULL, PRIMARY KEY(user_id))');
+  pool.query('CREATE TABLE IF NOT EXISTS posts (post_id INT GENERATED ALWAYS AS IDENTITY, user_id INT, created_at TIMESTAMP DEFAULT NOW(), title text NOT NULL, content text NOT NULL, FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE)');
+});
+
 
 app.get('/', (req, res) => {
   res.send("Hello from the backend! Navigate to \"localhost:80\" to see the front-end application.")
